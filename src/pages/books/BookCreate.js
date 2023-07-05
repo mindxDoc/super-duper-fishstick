@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import Layout from "../../components/Layout"
 
 function BookCreate() {
+    const navigate = useNavigate()
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [review, setReview] = useState('');
@@ -34,6 +35,7 @@ function BookCreate() {
                 setTitle('');
                 setAuthor('');
                 setReview('');
+                navigate(`/show/${response.data.data.book.book_id}`)
             })
             .catch(function (error) {
                 Swal.fire({

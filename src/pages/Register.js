@@ -89,7 +89,7 @@ function Register() {
         <Layout>
             <div className="container d-flex justify-content-center align-items-center min-vh-100">
                 <div className="row border rounded-5 p-3 bg-white shadow box-area">
-                    <div className="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style={{ background: "#103cbe" }}>
+                    <div className="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style={{ background: "#e31f26" }}>
                         <div className="featured-image mb-3">
                             <img src="https://img.icons8.com/bubbles/300/form.png" alt='register logo' className="img-fluid" style={{ width: 250 + "px" }} />
                         </div>
@@ -100,8 +100,8 @@ function Register() {
                     <div className="col-md-6 right-box">
                         <div className="row align-items-center">
                             <div className="header-text mb-4">
-                                <h2>Hello,Again</h2>
-                                <p>We are happy to have you back.</p>
+                                <h2>Nice to meet you</h2>
+                                <p>We are happy to have you here.</p>
                             </div>
                             <form onSubmit={(e) => { registerAction(e) }}>
                                 <div className="input-group mb-3">

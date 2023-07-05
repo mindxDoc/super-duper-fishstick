@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Layout from "../../components/Layout"
 import Swal from 'sweetalert2'
-import { createBrowserHistory } from 'history'
 
 function BookShow() {
     const [id, setId] = useState(useParams().id); // eslint-disable-line
     const [book, setBook] = useState({ title: '', author: '', review: '' })
-    const history = createBrowserHistory()
+    const navigate = useNavigate()
 
     useEffect(() => {
         fetchData()
@@ -29,44 +28,63 @@ function BookShow() {
             })
     }
 
-    const handleDelete = (id) => {
+    async function handleDelete(id) {
         const token = localStorage.getItem('token');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
+
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            });
+
             if (result.isConfirmed) {
-                const headers = { 'token': token };
-                axios.delete(`/api/v1/books/${id}`, { headers })
-                    .then(function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Book deleted successfully!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    })
-                    .catch(function (error) {
-                        if (error.response && error.response.status === 401) {
-                            // Redirect to login if token expired
-                            localStorage.removeItem('token');
-                            history.push('/login');
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'An Error Occurred!',
-                                showConfirmButton: false,
-                                timer: 1500,
-                            });
-                        }
+                const headers = { token };
+
+                const response = await axios.delete(`/api/v1/books/${id}`, { headers });
+
+                if (response.status === 204) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Book deleted successfully!',
+                        showConfirmButton: false,
+                        timer: 1500,
                     });
+                    navigate("/")
+                } else {
+                    if (response.status === 401) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Unauthorized',
+                            text: 'Please log in again.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        localStorage.removeItem('token');
+                        navigate("/")
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to delete the book',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    }
+                }
             }
-        })
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'An Error Occurred!',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            console.error(error);
+        }
     }
 
     return (

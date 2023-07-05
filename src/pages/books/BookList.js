@@ -49,50 +49,66 @@ function BookList() {
         setIsLoading(false);
     };
 
-    const handleDelete = async (id) => {
-        setIsLoading(false);
+    async function handleDelete(id) {
         const token = localStorage.getItem('token');
+
         try {
-            await Swal.fire({
+            const result = await Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
             });
 
-            const headers = { 'token': token };
+            if (result.isConfirmed) {
+                const headers = { token };
 
-            try {
-                await axios.delete(`/api/v1/books/${id}`, { headers }, {withCredentials: true});
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Book deleted successfully!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                console.log("hello js");
-                setIsLoading(true);
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    // Redirect to login if token expired
-                    localStorage.removeItem('token');
-                    history.push('/login');
-                } else {
+                const response = await axios.delete(`/api/v1/books/${id}`, { headers });
+
+                if (response.status === 204) {
                     Swal.fire({
-                        icon: 'error',
-                        title: 'An Error Occurred!',
+                        icon: 'success',
+                        title: 'Book deleted successfully!',
                         showConfirmButton: false,
                         timer: 1500,
                     });
-                    setIsLoading(false);
+
+                    const updatedBooks = books.filter((book) => book.book_id !== id);
+                    setBookList(updatedBooks);
+                    fetchData()
+                } else {
+                    if (response.status === 401) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Unauthorized',
+                            text: 'Please log in again.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        localStorage.removeItem('token');
+                        history.push('/');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to delete the book',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        fetchData()
+                    }
                 }
             }
         } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'An Error Occurred!',
+                showConfirmButton: false,
+                timer: 1500,
+            });
             console.error(error);
-            setIsLoading(false);
         }
     }
 

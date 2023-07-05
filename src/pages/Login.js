@@ -15,8 +15,6 @@ function Login() {
         if (token && token !== 'undefined' && token !== null) {
             navigate('/');
         }
-        console.log(localStorage.getItem('token'));
-        console.log('check token null, not logged in yet');
     }, []); // eslint-disable-line
 
     const handleEmailChange = (e) => {
@@ -62,7 +60,6 @@ function Login() {
             });
 
             const { data } = response;
-            console.log(data.jwtToken);
             if (response.status === 200) {
                 localStorage.setItem('token', data.jwtToken);
                 navigate('/');
@@ -86,7 +83,7 @@ function Login() {
         <Layout>
             <div className="container d-flex justify-content-center align-items-center min-vh-100">
                 <div className="row border rounded-5 p-3 bg-white shadow box-area">
-                    <div className="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style={{ background: "#103cbe" }}>
+                    <div className="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style={{ background: "#e31f26" }}>
                         <div className="featured-image mb-3">
                             <img src="https://img.icons8.com/bubbles/300/enter-2.png" alt='login logo' className="img-fluid" style={{ width: 250 + "px" }} />
                         </div>
@@ -97,7 +94,7 @@ function Login() {
                     <div className="col-md-6 right-box">
                         <div className="row align-items-center">
                             <div className="header-text mb-4">
-                                <h2>Hello,Again</h2>
+                                <h2>Hello, Again</h2>
                                 <p>We are happy to have you back.</p>
                             </div>
                             <form onSubmit={loginAction}>
