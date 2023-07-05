@@ -8,6 +8,7 @@ import BookList from './pages/books/BookList';
 import BookCreate from './pages/books/BookCreate';
 import BookEdit from './pages/books/BookEdit';
 import BookShow from './pages/books/BookShow';
+import PRDPage from './pages/PRDPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/prd" element={<PRDPage />} />
         <Route exact path='/' element={<BookList />} />
         <Route path="/create" element={<BookCreate />} />
         <Route path="/edit/:id" element={<BookEdit />} />
