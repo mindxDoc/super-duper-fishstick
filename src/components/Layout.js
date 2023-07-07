@@ -102,17 +102,15 @@ const Layout = ({ children }) => {
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             {shouldShowNavigationFooter && (
                 <nav
-                    className={`navbar navbar-expand-lg navbar-light fixed-top ${isMobile && isMenuOpen ? 'mobile-menu-open' : ''
-                        }`}
+                    className={`navbar navbar-expand-lg navbar-light fixed-top ${isMobile && isMenuOpen ? 'mobile-menu-open' : ''}`}
                     style={{
                         backgroundColor: '#fff',
-                        color: '#fff',
                         height: '100px',
                         transition: 'background-color 0.3s ease-in-out',
                     }}
                 >
                     <div
-                        className="container"
+                        className={`container`}
                         style={{
                             transition: 'background-color 0.3s ease-in-out',
                         }}
@@ -130,30 +128,36 @@ const Layout = ({ children }) => {
                             )}
                         </button>
 
-                        <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`}>
-                            <ul className="navbar-nav mr-auto">
-                                <li className="nav-item">
-                                    <span className="navbar-text" style={{ color: '#2c2b2b' }}>
-                                        <strong>Welcome, {user.user_name}</strong>
-                                    </span>
-                                </li>
-                            </ul>
+                        <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`} style={{ flexGrow: 0 }}>
+                            <div style={{ marginRight: "15px" }} className={`${isMenuOpen ? 'mb-2' : ''}`}>
+                                <ul className="navbar-nav mr-auto">
+                                    <li className="nav-item" style={{}}>
+                                        <span className="navbar-text" style={{ color: '#2c2b2b' }}>
+                                            <strong>Welcome, {user.user_name}</strong>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
 
                             <ul className="navbar-nav ml-auto order-lg-last">
-                                <li className="nav-item">
-                                    <Link to="/create" className="nav-link" style={{ color: '#e31f26' }}>
-                                        New review
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <button
-                                        onClick={logoutAction}
-                                        className="nav-link btn btn-outline-danger ml-3"
-                                        style={{ color: '#2c2b2b', borderColor: '#e31f26' }}
-                                    >
-                                        Logout
-                                    </button>
-                                </li>
+                                <div style={{ marginRight: "15px" }} className={`${isMenuOpen ? 'mb-2' : ''}`}>
+                                    <li className="nav-item">
+                                        <Link to="/create" className="btn btn-outline-primary" >
+                                            New review
+                                        </Link>
+                                    </li>
+                                </div>
+                                <div>
+                                    <li className="nav-item">
+                                        <button
+                                            onClick={logoutAction}
+                                            className="btn btn-outline-secondary ml-3"
+                                            style={{ color: '#e31f26' }}
+                                        >
+                                            Logout
+                                        </button>
+                                    </li>
+                                </div>
                             </ul>
                         </div>
                     </div>
@@ -161,7 +165,7 @@ const Layout = ({ children }) => {
             )}
 
             <div
-                className="container mt-4"
+                className={` container ${isMenuOpen ? 'mt-5' : ''}`}
                 style={{ paddingTop: shouldShowNavigationFooter ? (isMenuOpen ? '200px' : '100px') : '0' }}
             >
                 {children}

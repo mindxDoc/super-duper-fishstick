@@ -10,8 +10,39 @@ function BookCreate() {
     const [author, setAuthor] = useState('');
     const [review, setReview] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const [errors, setErrors] = useState({});
+
+    function validateForm() {
+        let formIsValid = true;
+        const newErrors = {};
+
+        // Validate the title field
+        if (title.trim() === '') {
+            formIsValid = false;
+            newErrors.title = 'Title is required';
+        }
+
+        // Validate the author field
+        if (author.trim() === '') {
+            formIsValid = false;
+            newErrors.author = 'Author is required';
+        }
+
+        // Validate the review field
+        if (review.trim() === '') {
+            formIsValid = false;
+            newErrors.review = 'Review is required';
+        }
+
+        setErrors(newErrors);
+        return formIsValid;
+    }
 
     const handleSave = () => {
+        if (!validateForm()) {
+            return;
+        }
+
         setIsSaving(true);
         axios.post('/api/v1/books', {
             title: title,
@@ -70,6 +101,7 @@ function BookCreate() {
                                     className="form-control"
                                     id="title"
                                     name="title" />
+                                    {errors.title && <div className="text-danger">{errors.title}</div>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="author">Author</label>
@@ -80,6 +112,7 @@ function BookCreate() {
                                     id="author"
                                     rows="3"
                                     name="author"></textarea>
+                                    {errors.author && <div className="text-danger">{errors.author}</div>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="review">Review</label>
@@ -90,6 +123,7 @@ function BookCreate() {
                                     id="review"
                                     rows="3"
                                     name="review"></textarea>
+                                    {errors.review && <div className="text-danger">{errors.review}</div>}
                             </div>
                             <button
                                 disabled={isSaving}

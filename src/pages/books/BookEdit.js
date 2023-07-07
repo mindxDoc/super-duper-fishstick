@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import Layout from "../../components/Layout"
@@ -10,7 +10,34 @@ function BookEdit() {
     const [author, setAuthor] = useState('');
     const [review, setReview] = useState('');
     const [isSaving, setIsSaving] = useState(false)
+    const navigate = useNavigate();
+    const [errors, setErrors] = useState({});
 
+    function validateForm() {
+        let formIsValid = true;
+        const newErrors = {};
+
+        // Validate the title field
+        if (title.trim() === '') {
+            formIsValid = false;
+            newErrors.title = 'Title is required';
+        }
+
+        // Validate the author field
+        if (author.trim() === '') {
+            formIsValid = false;
+            newErrors.author = 'Author is required';
+        }
+
+        // Validate the review field
+        if (review.trim() === '') {
+            formIsValid = false;
+            newErrors.review = 'Review is required';
+        }
+
+        setErrors(newErrors);
+        return formIsValid;
+    }
 
     useEffect(() => {
         fetchData()
@@ -43,6 +70,10 @@ function BookEdit() {
 
 
     const handleSave = () => {
+        if (!validateForm()) {
+            return;
+        }
+
         setIsSaving(true);
         const token = localStorage.getItem('token');
         const headers = { 'token': token };
@@ -50,7 +81,7 @@ function BookEdit() {
             title: title,
             author: author,
             review: review,
-        }, {headers})
+        }, { headers })
             .then(function (response) {
                 Swal.fire({
                     icon: 'success',
@@ -59,6 +90,7 @@ function BookEdit() {
                     timer: 1500
                 })
                 setIsSaving(false);
+                navigate(`/show/${response.data.data.book.book_id}`)
             })
             .catch(function (error) {
                 Swal.fire({
@@ -93,6 +125,7 @@ function BookEdit() {
                                     className="form-control"
                                     id="title"
                                     name="title" />
+                                    {errors.title && <div className="text-danger">{errors.title}</div>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="author">Author</label>
@@ -103,6 +136,7 @@ function BookEdit() {
                                     id="author"
                                     rows="3"
                                     name="author"></textarea>
+                                    {errors.author && <div className="text-danger">{errors.author}</div>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="review">Review</label>
@@ -113,6 +147,7 @@ function BookEdit() {
                                     id="review"
                                     rows="3"
                                     name="review"></textarea>
+                                    {errors.review && <div className="text-danger">{errors.review}</div>}
                             </div>
                             <button
                                 disabled={isSaving}
