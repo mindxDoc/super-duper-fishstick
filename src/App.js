@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import BookList from './pages/books/BookList';
@@ -15,7 +15,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="*" element={<Redirect to="/" />} />
+        <Route path="*" element={<Navigate to="/" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/prd" element={<PRDPage />} />
